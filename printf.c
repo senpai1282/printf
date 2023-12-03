@@ -5,41 +5,40 @@
  * _printf > Produces output according to the format
  * @format: A character string containing zero or more directives
  *
- * Return: The number of characters printed
- */
+ * Return: The number of bytes printed
+*/
 
 int _printf(const char *format, ...)
 	{
-		va_list args;
-		int count = 0;
+		int sum = 0;
+		va_list ap;
+		char *p, *start;
+		params_t params = PARAMS_INIT;
 
-		va_start(args, format);
-		while (*format != '\0')
-	       		{
-				if (*format == '%') {
-					format++;
-					if (*format == 'c') {
-						char character = va_arg(args, int);
-						putchar(character);
-						count++;
-						}
-					else if (*format == 's') {
-						const char *str = va_arg(args, const char *);
-						while (*str != '\0') {
-							putchar(*str);
-							str++;
-							count++;
-						}
-					} else if (*format == '%') {
-						putchar('%');
-						count++;
-						}
-					} else {
-						putchar(*format);
-						count++;
-					}format++;
-					
-		va_end(args);
-		
-		return count;
+		if (!format || (format[0] == '%' && !format[1]))
+		return (-1);
+	if (format[0] == '%' && format[1] == ' ' && !format[2])
+		return (-1);
+	for (p = format; *p; p++)
+	{
+		if (*p == '%')
+		{
+			p++;
+			if (*p == '%')
+			{
+				count += _putchar('%');
+				continue;
+			}
+			while (get_flag(*p, &flags))
+				p++;
+			pfunc = get_print(*p);
+			count += (pfunc)
+				? pfunc(arguments, &flags)
+				: _printf("%%%c", *p);
+		} else
+			count += _putchar(*p);
+	}
+		_putchar(-1);
+		va_end(arguments);
+		return (count);
 	}
