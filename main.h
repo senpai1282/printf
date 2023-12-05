@@ -11,7 +11,7 @@
 #define buf_flush -1
 
 #define NULL_STRING "(null)"
-#define PARAMS_INIT (0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+#define SET_INIT (0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 
 #define CONVERT_LOWERCASE
 #define CONVERT_UNSIGNED
@@ -22,7 +22,7 @@
  *
  */
 
-typedef struct paramerters
+typedef struct settings
 {
 	unsigned int unsign	: 1;
 
@@ -36,8 +36,8 @@ typedef struct paramerters
 	unsigned int precision;
 
 	unsigned int h_modifier	: 1;
-	unsigned int l midifier	: 1;
-} params_t;
+	unsigned int l_midifier	: 1;
+} set_t;
 
 /**
  *
@@ -48,33 +48,33 @@ typedef struct paramerters
 typedef struct specifier
 {
 	char *specifier;
-	int (*f)(va_list, params_t *);
+	int (*f)(va_list, set_t *);
 } specifier_t;
 
-/*_put.c module */
+/*_put.c */
 int _puts(char *str);
 int _putchar(int c);
 
-/*print_function.c module */
-int print_char(va_list ap, params_t *params);
-int print_int(va_list ap, params_t *params);
-int print_string(va_list ap, params_t *params);
-int print_persent(va_list ap, params_t *params);
-int print_S(va_list ap, params_t *params);
-
-/* simple_printers.c module */
+/* simple_printers.c */
 int print_from_to(char *start, char *stop, char except);
-int print_rev(va_list ap, params_t *params);
-int print_rot13(va_list ap, param_t *params);
+int print_rev(va_list ap, set_t *set);
+int print_rot13(va_list ap, set_t *set);
 
-/* number.c module */
-char *convert(long int num, int base, int flags, params_t *params);
-int print_unsigned(va_list ap, params.t *params);
-int print_adress(va_list ap, params_t *params);
+/* number.c */
+char *convert(long int num, int base, int flags, set_t *set);
+int print_unsigned(va_list ap, set.t *set);
+int print_adress(va_list ap, set_t *set);
 
-/* specifier.c module */
-int (*get_specefier(char *s))(va_list ap, params_t *params);
-int get_print_func(char *s, va_list ap, params_t *params);
+/* specifier.c */
+int (*get_specefier(char *s))(va_list ap, set_t *set);
+int get_print_func(char *s, va_list ap, set_t *set);
 int _printf(const char *format, ...);
+
+/*print_function.c */
+int print_char(va_list ap, set_t *set);
+int print_int(va_list ap, set_t *set);
+int print_string(va_list ap, set_t *set);
+int print_persent(va_list ap, set_t *set);
+int print_S(va_list ap, set_t *set);
 
 #endif
