@@ -25,14 +25,14 @@ int _printf(const char *format, ...)
 			switch (*format)
 			{
 				case 'c': {
-						  char c = (char) va_arg(args, int);
-						  putchar (c);
-						  con_char++;
+						char c = (char) va_arg(args, int);
+						putchar (c);
+						con_char++;
 					  }
 						  break;
-			case 's': {
-					  const char *s = va_arg(args, const char *);
-					  while (*s != '\0')
+				case 's': {
+						const char *s = va_arg(args, const char *);
+						while (*s != '\0')
 					  {
 						  putchar(*s);
 						  s++;
@@ -40,50 +40,54 @@ int _printf(const char *format, ...)
 				 	  }
 					  break;
 				  }
-			case '%':
-				  putchar('%');
-				  con_char++;
-				  break;
-			case 'd':
-				  case 'i': {
-						    int num = va_arg(args, int);
-						    printf("%d", num);
-						    con_char++;
-						    break;
-					    }
-				 case 'u': {
-						   unsigned int num = va_arg(args, unsigned int);
-						   printf("%u", num);
-						   con_char++;
-						    break;
-					   }
-				  case 'o': {
-						    unsigned int num = va_arg(args, unsigned int);
-						    printf("%o", num);
-						    con_char++;
-						    break;
-					    }
-				 case 'x':
-					     case 'X': {
-							       unsigned int num = va_arg(args, unsigned int);
-							       printf("%x", num);
-							       con_char++;
-							        break;
-						       }
-					     case 'p': {
-							       void *ptr = va_arg(args, void *);
-							       printf("%p", ptr);
-							       con_char++;
-							       break;
-						       }
-				              default:
-						        putchar('%');
-							putchar(*format);
-							con_char += 2;
-							break;
+				case '%':
+					putchar('%');
+					con_char++;
+					break;
+				case 'd':
+				{
+					int num = va_arg(args, int);
+					printf("%d", num);
+					con_char++;
+					break;
+				}
+				case 'u': 
+				{
+					unsigned int num = va_arg(args, unsigned int);
+					printf("%u", num);
+					con_char++;
+					break;
+				}
+				case 'o': 
+				{
+					unsigned int num = va_arg(args, unsigned int);
+					printf("%o", num);
+					con_char++;
+					break;
+				}
+				case 'X': 
+				{
+					unsigned int num = va_arg(args, unsigned int);
+					printf("%x", num);
+					con_char++;
+					break;
+				}
+				case 'p':
+				{
+				void *ptr = va_arg(args, void *);
+					printf("%p", ptr);
+					con_char++;
+					break;
+				}
+				default:
+					putchar('%');
+					putchar(*format);
+					con_char += 2;
+					break;
 			}
 
-		} else {
+		} else
+		{
 			putchar(*format);
 			con_char++;
 		}
