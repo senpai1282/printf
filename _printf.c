@@ -1,67 +1,70 @@
-#include "main.h"
 #include <stdarg.h>
-#include <stdio.h>
+#include <unistd.h>
+
 /**
- * _printf - generate output according to format
+ * _printf - Produces output according to a format
  * @format: A string containing characters and specifiers
  *
  * Description:
- * This function mimics the basic functionality of printf by handling
- * conversion specifiers %c, %s, and %%.
- * For %c, it fetches a character argument and prints it using putchar.
- * For %s, it fetches a string argument and prints each character.
- * For %%, it prints a single % character.
+ * This function handles conversion specifiers %c, %s, %%, %d, and %i.
+ * For %c, %s, and %% it outputs the corresponding characters.
+ * For %d and %i, it converts integers to strings and outputs.
  *
  * Return:
- * The number of characters printed (excluding the null)
+ * The number of characters printed (excluding the null byte)
  */
+int _printf(const char *format, ...) {
+    int print_char = 0;
+    va_list arg_lists;
 
-int _printf(const char *format, ...)
-{
-    va_list args;
-    int printed_chars = 0;
+    if (format == NULL)
+        return (-1);
 
-    va_start(args, format);
+    va_start(arg_lists, format);
 
-    while (*format)
-	{
-        if (*format == '%') 
-		{
+    while (*format) {
+        if (*format != '%') {
+            write(1, format, 1);
+            print_char++;
+        } else {
             format++;
-            if (*format == 'c')
-			{
-                int c = va_arg(args, int);
-                putchar(c);
-                printed_chars++;
-            } else if (*format == 's')
-			{
-                char *s = va_arg(args, char*);
-                while (*s)
-				{
-                    putchar(*s);
-                    printed_chars++;
-                    s++;
+            if (*format == '\0')
+                break;
+            
+            if (*format == '%') {
+                write(1, format, 1);
+                print_char++;
+            } else if (*format == 'c') {
+                char c = va_arg(arg_lists, int);
+                write(1, &c, 1);
+                print_char++;
+            } else if (*format == 's') {
+                char *str = va_arg(arg_lists, char*);
+                int str_len = 0;
+                while (str[str_len] != '\0')
+                    str_len++;
+                write(1, str, str_len);
+                print_char += str_len;
+            } else if (*format == 'd' || *format == 'i') {
+                int num = va_arg(arg_lists, int);
+                int temp = num;
+                int digits = 0;
+                if (temp <= 0) {
+                    digits = 1;
+                    temp = -temp;
                 }
-            } else if (*format == '%')
-			{
-                putchar('%');
-                printed_chars++;
+                while (temp != 0) {
+                    temp /= 10;
+                    digits++;
+                }
+                char buffer[digits + 1];
+                snprintf(buffer, sizeof(buffer), "%d", num);
+                write(1, buffer, digits);
+                print_char += digits;
             }
-			else if (*format == 'd' || *format == 'i')
-            {
-                int num = va_arg(args, int);
-                printf("%d", num);
-                printed_chars += snprintf(NULL, 0, "%d", num);
-            }
-        else 
-		{
-            putchar(*format);
-            printed_chars++;
         }
         format++;
     }
-
-    va_end(args);
-
-    return printed_chars;
+    va_end(arg_lists);
+    return print_char;
 }
