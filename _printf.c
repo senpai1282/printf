@@ -1,70 +1,87 @@
 #include <stdarg.h>
-#include <unistd.h>
+#include <stdio.h>
 
 /**
  * _printf - Produces output according to a format
  * @format: A string containing characters and specifiers
  *
  * Description:
- * This function handles conversion specifiers %c, %s, %%, %d, and %i.
- * For %c, %s, and %% it outputs the corresponding characters.
- * For %d and %i, it converts integers to strings and outputs.
+ * This function handles conversion specifiers %c, %s, %%, %d, %u, %o, %X, %p.
+ * It outputs characters, strings, and formatted integers as specified by the format string.
  *
  * Return:
- * The number of characters printed (excluding the null byte)
+ * The number of characters printed (excluding the null byte used to end output to strings)
  */
 int _printf(const char *format, ...) {
-    int print_char = 0;
-    va_list arg_lists;
+    int con_char = 0;
+    va_list args;
+    va_start(args, format);
 
-    if (format == NULL)
-        return (-1);
-
-    va_start(arg_lists, format);
-
-    while (*format) {
-        if (*format != '%') {
-            write(1, format, 1);
-            print_char++;
-        } else {
+    while (*format != '\0') {
+        if (*format == '%') {
             format++;
-            if (*format == '\0')
-                break;
-            
-            if (*format == '%') {
-                write(1, format, 1);
-                print_char++;
-            } else if (*format == 'c') {
-                char c = va_arg(arg_lists, int);
-                write(1, &c, 1);
-                print_char++;
-            } else if (*format == 's') {
-                char *str = va_arg(arg_lists, char*);
-                int str_len = 0;
-                while (str[str_len] != '\0')
-                    str_len++;
-                write(1, str, str_len);
-                print_char += str_len;
-            } else if (*format == 'd' || *format == 'i') {
-                int num = va_arg(arg_lists, int);
-                int temp = num;
-                int digits = 0;
-                if (temp <= 0) {
-                    digits = 1;
-                    temp = -temp;
+            switch (*format) {
+                case 'c': {
+                    char c = (char)va_arg(args, int);
+                    putchar(c);
+                    con_char++;
+                    break;
                 }
-                while (temp != 0) {
-                    temp /= 10;
-                    digits++;
+                case 's': {
+                    const char *s = va_arg(args, const char *);
+                    while (*s != '\0') {
+                        putchar(*s);
+                        s++;
+                        con_char++;
+                    }
+                    break;
                 }
-                char buffer[digits + 1];
-                snprintf(buffer, sizeof(buffer), "%d", num);
-                write(1, buffer, digits);
-                print_char += digits;
+                case '%':
+                    putchar('%');
+                    con_char++;
+                    break;
+                case 'd': {
+                    int num = va_arg(args, int);
+                    printf("%d", num);
+                    con_char++;
+                    break;
+                }
+                case 'u': {
+                    unsigned int num = va_arg(args, unsigned int);
+                    printf("%u", num);
+                    con_char++;
+                    break;
+                }
+                case 'o': {
+                    unsigned int num = va_arg(args, unsigned int);
+                    printf("%o", num);
+                    con_char++;
+                    break;
+                }
+                case 'X': {
+                    unsigned int num = va_arg(args, unsigned int);
+                    printf("%x", num);
+                    con_char++;
+                    break;
+                }
+                case 'p': {
+                    void *ptr = va_arg(args, void *);
+                    printf("%p", ptr);
+                    con_char++;
+                    break;
+                }
+                default:
+                    putchar('%');
+                    putchar(*format);
+                    con_char += 2;
+                    break;
             }
+        } else {
+            putchar(*format);
+            con_char++;
         }
         format++;
     }
-    va_end(arg_lists);
-    return print_char;
+    va_end(args);
+    return con_char;
 }
