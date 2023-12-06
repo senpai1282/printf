@@ -66,7 +66,7 @@ int _printf(const char *format, ...)
 int main(){
     _printf("leo\n");
     _printf("%c\n", 'v');
-    _printf("%s\n", 's');
+    _printf("%s\n", 'string');
     _printf("%%\n");
     return 0;
 }
