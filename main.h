@@ -1,12 +1,8 @@
-#ifndef MAIN_H
-#define MAIN_H
-
-#include <string.h>
+#ifndef header
+#define header
 #include <stdarg.h>
-#include <unistd.h>
 
 int _printf(const char *format, ...);
-int binary (int num);
-int octal (int num);
+int _putchar(char c);
 
 #endif

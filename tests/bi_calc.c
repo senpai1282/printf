@@ -1,7 +1,7 @@
 #include "main.h"
 /**
- * bi_calc - unsigned integers to base2 ni
- * @bnum: unsigned integer to bi
+ * bi_calc - unsigned integers to base to ni
+ * @bnum: unsigned integer to binary
  * Return: bi value of int
  */
 unsigned int bi_calc(unsigned int bnum)
