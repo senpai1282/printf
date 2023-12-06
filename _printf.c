@@ -1,98 +1,67 @@
+#include "main.h"
+#include <stdarg.h>
 #include <stdio.h>
-#include  <stdarg.h>
-
 /**
- * _printf - produces output according to a format
- * @con_char - calculate the number of character printed
- * this function will call the get_print() function that will
- * determine which printing function to call depending on the conversion
- * Return: length of the formatted output string
-**/
+ * _printf - generate output according to format
+ * @format: A string containing characters and specifiers
+ *
+ * Description:
+ * This function mimics the basic functionality of printf by handling
+ * conversion specifiers %c, %s, and %%.
+ * For %c, it fetches a character argument and prints it using putchar.
+ * For %s, it fetches a string argument and prints each character.
+ * For %%, it prints a single % character.
+ *
+ * Return:
+ * The number of characters printed (excluding the null)
+ */
 
 int _printf(const char *format, ...)
 {
-	int con_char;
-	va_list args;
-	va_start(args, format);
+    va_list args;
+    int printed_chars = 0;
 
-	con_char = 0;
+    va_start(args, format);
 
-	while (*format != '\0')
+    while (*format)
 	{
-		if (*format == '%')
+        if (*format == '%') 
 		{
-			format++;
-			switch (*format)
+            format++;
+            if (*format == 'c')
 			{
-				case 'c': {
-						char c = (char) va_arg(args, int);
-						putchar (c);
-						con_char++;
-					  }
-						  break;
-				case 's': {
-						const char *s = va_arg(args, const char *);
-						while (*s != '\0')
-					  {
-						  putchar(*s);
-						  s++;
-						  con_char++;
-				 	  }
-					  break;
-				  }
-				case '%':
-					putchar('%');
-					con_char++;
-					break;
-				case 'd':
+                int c = va_arg(args, int);
+                putchar(c);
+                printed_chars++;
+            } else if (*format == 's')
+			{
+                char *s = va_arg(args, char*);
+                while (*s)
 				{
-					int num = va_arg(args, int);
-					printf("%d", num);
-					con_char++;
-					break;
-				}
-				case 'u': 
-				{
-					unsigned int num = va_arg(args, unsigned int);
-					printf("%u", num);
-					con_char++;
-					break;
-				}
-				case 'o': 
-				{
-					unsigned int num = va_arg(args, unsigned int);
-					printf("%o", num);
-					con_char++;
-					break;
-				}
-				case 'X': 
-				{
-					unsigned int num = va_arg(args, unsigned int);
-					printf("%x", num);
-					con_char++;
-					break;
-				}
-				case 'p':
-				{
-				void *ptr = va_arg(args, void *);
-					printf("%p", ptr);
-					con_char++;
-					break;
-				}
-				default:
-					putchar('%');
-					putchar(*format);
-					con_char += 2;
-					break;
-			}
-
-		} else
+                    putchar(*s);
+                    printed_chars++;
+                    s++;
+                }
+            } else if (*format == '%')
+			{
+                putchar('%');
+                printed_chars++;
+            }
+			else if (*format == 'd' || *format == 'i')
+            {
+                int num = va_arg(args, int);
+                printf("%d", num);
+                printed_chars += snprintf(NULL, 0, "%d", num);
+            }
+        else 
 		{
-			putchar(*format);
-			con_char++;
-		}
-		format++;
-	}
-	va_end(args);
-	return con_char;
+            putchar(*format);
+            printed_chars++;
+        }
+        format++;
+    }
+
+    va_end(args);
+
+    return printed_chars;
 }
