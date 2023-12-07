@@ -1,7 +1,5 @@
 #include "main.h"
 
-
-
 /**
  * char_print - Prints a character
  * str_print - Prints a string
