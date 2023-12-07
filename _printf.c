@@ -1,7 +1,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-/**
+**
  * _printf - Produces output according to a format
  * @format: A string containing characters and specifiers
  *
@@ -12,14 +12,22 @@
  * Return:
  * The number of characters printed (excluding the null byte used to end output to strings)
  */
+    
 int _printf(const char *format, ...) {
+    if (format == NULL) return -1; // Error check for NULL format string
+
     int con_char = 0;
     va_list args;
     va_start(args, format);
 
     while (*format != '\0') {
-        if (*format == '%') {
+        if (*format != '%') {
+            putchar(*format);
+            con_char++;
+        } else {
             format++;
+            if (*format == '\0') break; // Handle % at the end of the string
+
             switch (*format) {
                 case 'c': {
                     char c = (char)va_arg(args, int);
@@ -29,10 +37,15 @@ int _printf(const char *format, ...) {
                 }
                 case 's': {
                     const char *s = va_arg(args, const char *);
-                    while (*s != '\0') {
-                        putchar(*s);
-                        s++;
-                        con_char++;
+                    if (s != NULL) {
+                        while (*s != '\0') {
+                            putchar(*s);
+                            s++;
+                            con_char++;
+                        }
+                    } else {
+                        printf("(null)"); // Handle NULL string
+                        con_char += 6; // Length of "(null)"
                     }
                     break;
                 }
@@ -76,9 +89,6 @@ int _printf(const char *format, ...) {
                     con_char += 2;
                     break;
             }
-        } else {
-            putchar(*format);
-            con_char++;
         }
         format++;
     }
