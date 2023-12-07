@@ -1,18 +1,17 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-**
+/**
  * _printf - Produces output according to a format
  * @format: A string containing characters and specifiers
  *
  * Description:
- * This function handles conversion specifiers %c, %s, %%, %d, %u, %o, %X, %p.
- * It outputs characters, strings, and formatted integers as specified by the format string.
+ * This function handles conversion specifiers %c, %s, and %%.
+ * It outputs characters and strings as specified by the format string.
  *
  * Return:
  * The number of characters printed (excluding the null byte used to end output to strings)
  */
-    
 int _printf(const char *format, ...) {
     if (format == NULL) return -1; // Error check for NULL format string
 
@@ -53,36 +52,6 @@ int _printf(const char *format, ...) {
                     putchar('%');
                     con_char++;
                     break;
-                case 'd': {
-                    int num = va_arg(args, int);
-                    printf("%d", num);
-                    con_char++;
-                    break;
-                }
-                case 'u': {
-                    unsigned int num = va_arg(args, unsigned int);
-                    printf("%u", num);
-                    con_char++;
-                    break;
-                }
-                case 'o': {
-                    unsigned int num = va_arg(args, unsigned int);
-                    printf("%o", num);
-                    con_char++;
-                    break;
-                }
-                case 'X': {
-                    unsigned int num = va_arg(args, unsigned int);
-                    printf("%x", num);
-                    con_char++;
-                    break;
-                }
-                case 'p': {
-                    void *ptr = va_arg(args, void *);
-                    printf("%p", ptr);
-                    con_char++;
-                    break;
-                }
                 default:
                     putchar('%');
                     putchar(*format);
